@@ -1,0 +1,34 @@
+Request di esempio:
+https://gibs.earthdata.nasa.gov/wms/epsg3857/best/wms.cgi?SERVICE=WMS&REQUEST=GetCapabilities&VERSION=1.3.0
+
+mi focalizzo su:
+layer: VIIRS_SNPP_DayNightBand_ENCC
+<westBoundLongitude>-90</westBoundLongitude>
+<eastBoundLongitude>90</eastBoundLongitude>
+<southBoundLatitude>-180</southBoundLatitude>
+<northBoundLatitude>180</northBoundLatitude>
+27.994401,85.078125,35.603719,97.558594
+ovest,sud,east,north
+
+la longitudine si muove sull'asse delle x
+la latitudine si muove sull'asse delle y
+
+
+dato il baricentro -71.23111,-38.43346 [Wildfire - Lonquimay, Chile]
+long - lat
+dato un lato di 30
+
+-71 + 10 = -41 -> (-61,-38)
+-71 - 10 = -101 -> (-81,-38)
+-38 + 10 = -8 -> (-71,-28)
+-38 - 10 = -48 -> (-71,-48)
+
+-61,-81,-28,-48,
+
+
+
+for example view:http://bboxfinder.com/#-41,-101,-8,-68
+
+https://gibs.earthdata.nasa.gov/wms/epsg4326/all/wms.cgi?SERVICE=WMS&REQUEST=GetMap&VERSION=1.3.0&LAYERS=VIIRS_SNPP_CorrectedReflectance_TrueColor&STYLES=&FORMAT=image%2Fpng&TRANSPARENT=true&HEIGHT=256&WIDTH=256&TIME=2020-03-01&CRS=EPSG:4326&BBOX=-61,-81,-28,-48
+
+https://gibs.earthdata.nasa.gov/wms/epsg4326/all/wms.cgi?SERVICE=WMS&REQUEST=GetMap&VERSION=1.3.0&LAYERS=VIIRS_SNPP_CorrectedReflectance_TrueColor&STYLES=&FORMAT=image%2Fpng&TRANSPARENT=true&HEIGHT=256&WIDTH=256&TIME=2020-03-01&CRS=EPSG:4326&BBOX=-90,-180,90,180

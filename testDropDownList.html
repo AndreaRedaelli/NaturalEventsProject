@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang=en>
+
+<head>
+    <meta charset="utf-8">
+
+    <!-- import di Google Maps API -->
+    <script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDJ0yPWrt4m7mRrcjmV0L0eQkZY3qP7cF8&callback=">
+        </script>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+        integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+    <!-- import of css, js about Bootstrap-->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+    <!-- import of js for the plugin Select2-->
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <!-- stylesheet associated-->
+    <link rel="stylesheet" type="text/css" href="http://localhost:8080/stylesheet/mystyle.css">
+    <!-- import of css for the plugin Select2-->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" />
+
+</head>
+
+<body>
+    <select id="layer-dropdown" name="layer">
+    </select>
+    <br />
+    <input id="lat" type="text"></input>
+    <input id="lon" type="text"></input>
+    <input id="data" type="text"></input>
+
+    <button id="bttn" onclick="callWS()">Call Ws</button>
+
+    <div id="immagine"></div>
+    <script>
+
+        // Initialize select2
+        $("#layer-dropdown").select2();
+        // put configuration
+        $("#layer-dropdown").select2({
+            theme: "classic",
+            placeholder: 'Select an option',
+            width: '225px'
+        });
+        let dropdown = $('#layer-dropdown');
+        dropdown.empty();
+        dropdown.append('<option selected="true" disabled>Choose Layer</option>');
+        dropdown.prop('selectedIndex', 0);
+
+        // spinner function are attached to ajax event
+        $(document)
+            .ajaxStart(function () {
+                $('#loadingDiv').show();
+            })
+            .ajaxStop(function () {
+                $('#loadingDiv').hide();
+            });
+        // parsing function
+        function parseToDropDownList(data) {
+            var obj = JSON.parse(data);
+            var option;
+            for (let i = 0; i < obj.length; i++) {
+                option = document.createElement('option');
+                option.text = obj[i];
+                option.value = obj[i];
+                dropdown.append(option);
+            }
+
+        }
+        var server = "http://localhost:9090"
+        // First, show the list of events document ready
+        $(document).ready(function () {
+            $.ajax({
+                url: server + "/getLayer",
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                method: "POST",
+                data: {},
+                success: function (data) {
+                    parseToDropDownList(data);
+                },
+                error: function () {
+                    alert("Error calling getLayer");
+                }
+            });
+        })
+        function callWS() {
+            var lon = parseInt($("#lon").val());
+            var lat = parseInt($("#lat").val());
+            var dimension = parseInt(30);
+            var data = $("#data").val();
+            var layerScelto = $("#layer-dropdown").val();
+            $('#immagine').html('<img src="http://localhost:9090/getImage?layers=' + 
+            layerScelto + '&styles=&format=image%2Fpng&transparent=true&height=256&width=256&time='
+            + data + '&crs=EPSG:4326&bbox=' + + (lon + dimension).toString() + "," + (lon - dimension).toString() + "," +
+                (lat + dimension).toString() + "," + (lat - dimension).toString() + '" />');
+     
+        }
+    </script>
+    <!-- spinner -->
+    <div class="spinner-border text-primary spinner" id="loadingDiv" role="status">
+        <span class="sr-only">Loading...</span>
+    </div>
+
+</body>
+
+</html>
